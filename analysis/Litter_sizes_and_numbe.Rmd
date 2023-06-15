@@ -1,0 +1,134 @@
+---
+title: "Litter sizes vs number of litters"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    code_folding: hide
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 8, collapse = TRUE)
+```
+
+```{r, include=FALSE, warning=FALSE, }
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+library(tidyverse)
+library(dplyr)
+install.packages("ggsignif", repos = "http://cran.us.r-project.org")
+library(ggsignif)
+install.packages('ggpubr', repos = "http://cran.us.r-project.org")
+library(ggpubr)
+install.packages('rstatix', repos = "http://cran.us.r-project.org")
+library(rstatix)
+
+ls<-read.csv("/Users/charris/Desktop/F5miceTest/litter_sizes_tidy.csv")
+# Add a numeric generation column for plotting
+ls <- ls %>%
+  mutate(generation_num = case_when(
+    generation_parent == "P" ~ 0,
+    generation_parent == "F1" ~ 1,
+    generation_parent == "F2" ~ 2,
+    generation_parent == "F3" ~ 3,
+    generation_parent == "F4" ~ 4,
+  ))
+```
+
+# Litter size for each generation
+
+Number of pups for all litter numbers
+
+```{r}
+
+# Graph the litter sizes over the generations
+
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  filter(generation_num != 0) %>%
+  ggplot(aes(x = generation_num, y = pup_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Parent generation") + ylab("Number of pups")
+```
+
+# Compare the litter size with litter number
+
+The number of pups per litter decreases with litter number in both genotypes
+
+```{r}
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  #filter(genotype != "Fancm-/-") %>%
+  filter(generation_num != 0) %>%
+  ggplot(aes(x = generation_num, y = litter_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  #scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Litter number") +  ylab("Number of pups")
+```
+
+Compare the litter sizes for only the 1st litters
+
+```{r}
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  #filter(genotype != "Fancm-/-") %>%
+  filter(generation_num != 0) %>%
+  filter(litter_number == 1) %>%
+  ggplot(aes(x = generation_num, y = pup_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Parent generation") + ylab("Number of pups") +
+  ggtitle("Litter sizes from 1st litters")
+```
+
+Compare the litter sizes for only the 2nd litters
+
+```{r}
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  #filter(genotype != "Fancm-/-") %>%
+  filter(generation_num != 0) %>%
+  filter(litter_number == 2) %>%
+  ggplot(aes(x = generation_num, y = pup_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Parent generation") + ylab("Litter size")+
+  ggtitle("Litter sizes from 2nd litters")
+```
+
+Compare the litter sizes for only the 3rd litters
+
+```{r}
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  #filter(genotype != "Fancm-/-") %>%
+  filter(generation_num != 0) %>%
+  filter(litter_number == 3) %>%
+  ggplot(aes(x = generation_num, y = pup_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Parent generation") + ylab("Number of pups")+
+  ggtitle("Litter sizes from 3rd litters")
+```
+
+Compare the litter sizes for only the 4th litters
+
+```{r}
+ls %>%
+  filter(genotype != "Fancm+/-") %>%
+  #filter(genotype != "Fancm-/-") %>%
+  filter(generation_num != 0) %>%
+  filter(litter_number == 4) %>%
+  ggplot(aes(x = generation_num, y = pup_number, colour = genotype)) +
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm") +
+  scale_x_discrete(limits=c("F1", "F2", "F3", "F4"))+
+  xlab("Parent generation") + ylab("Number of pups")+
+  ggtitle("Litter sizes from 4th litters")
+```
